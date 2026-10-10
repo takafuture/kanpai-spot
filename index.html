@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kanpai Spot</title>
+<style>
+:root{--bg1:#2b1a0e;--bg2:#4a2a14;--panel:#3b2417;--cream:#fff3e0;--paper:#fff8ee;--ink:#3a2410;--sub:#8a6a4a;--red:#d9443a;--dred:#8e1b1b;--amber:#ffb347;--gold:#ffd28a;--ok:#1f7a47;--soon:#ffb347;--out:#c0392b;--grey:#6d5a4a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:linear-gradient(var(--bg1),var(--bg2)) fixed;color:var(--cream);font-family:system-ui,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.5}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+header{background:var(--dred);border-bottom:3px solid #5e1010;position:sticky;top:0;z-index:20}
+.hd{max-width:980px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-weight:800;font-size:20px;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.lang{background:#2b1a0e;border:2px solid var(--gold);border-radius:20px;padding:5px 12px;font-weight:700;font-size:13px;display:flex;gap:6px;align-items:center}
+.lang .l{opacity:.55}.lang .l.active{opacity:1;color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+main{max-width:980px;margin:0 auto;padding:14px}
+.hero{text-align:center;padding:6px 0 14px}
+.lanterns{display:flex;justify-content:center;gap:22px;margin-bottom:8px}
+.ch{width:42px;height:54px;background:var(--red);border-radius:50%/45%;border-top:5px solid #2b1a0e;border-bottom:5px solid #2b1a0e;box-shadow:0 0 18px rgba(255,120,60,.6);font-weight:800;line-height:44px;font-size:15px;transform-origin:50% -20px;animation:sway 3.6s ease-in-out infinite}
+.ch:nth-child(2){animation-delay:-1.2s}.ch:nth-child(3){animation-delay:-2.4s}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.tag{font-size:22px;font-weight:800;color:var(--gold);letter-spacing:2px;margin:0}
+.sub{margin:4px 0 0;font-size:13px;opacity:.85}
+.panel{background:var(--panel);border:2px solid #8a5a2a;border-radius:16px;padding:12px 14px}
+.ctl{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:640px){.ctl{grid-template-columns:1.2fr 1fr 1.2fr}}
+.cl{font-size:12px;color:var(--gold);font-weight:700;margin-bottom:5px}
+.step{display:flex;align-items:center;gap:8px}
+.step .v{min-width:74px;text-align:center;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.rb{width:40px;height:40px;border-radius:50%;border:2px solid var(--amber);background:#2b1a0e;font-size:20px;font-weight:800;line-height:1}
+.rb:active{transform:scale(.92)}
+.link{background:none;border:0;color:var(--gold);text-decoration:underline;font-size:12px;padding:6px 4px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:9px 6px;border-radius:10px;border:2px solid #8a5a2a;background:#2b1a0e;font-weight:700}
+.seg button[aria-pressed=true]{background:var(--red);border-color:var(--gold)}
+.chip{margin:12px 0 0;background:linear-gradient(90deg,#8e1b1b,#b32a22);border:2px solid var(--gold);border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.chip[hidden]{display:none}
+.chip b{font-size:16px}.chip .sp{flex:1}
+.pbtn{background:var(--paper);color:var(--ink);border:0;border-radius:18px;padding:7px 14px;font-weight:700;font-size:13px}
+.sum{margin:16px 2px 8px;font-size:17px;font-weight:800;color:var(--gold)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:860px){.grid{grid-template-columns:1.35fr 1fr;align-items:start}.aside{position:sticky;top:70px}}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tabs button{flex:1;padding:10px;border-radius:12px 12px 0 0;border:2px solid #8a5a2a;border-bottom:0;background:#2b1a0e;font-weight:700}
+.tabs button[aria-selected=true]{background:var(--red);border-color:var(--gold)}
+.mapwrap{border:2px solid #8a5a2a;border-radius:14px;overflow:hidden;background:#5a3a1a}
+svg{display:block;width:100%;height:auto}
+.pin{cursor:pointer}
+.pin ellipse.b{filter:drop-shadow(0 0 4px rgba(255,170,70,.75))}
+.pin .lbl{font-size:10.5px;font-weight:800;fill:#fff8ee;text-anchor:middle;paint-order:stroke;stroke:#2b1a0e;stroke-width:3px;stroke-linejoin:round}
+.pin .ring{fill:none;stroke:var(--gold);stroke-width:2.5;stroke-dasharray:4 3;animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.pin:focus-visible{outline:none}.pin:focus-visible .ring{stroke:#fff;opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;padding:8px 4px 0;opacity:.95}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.note-s{font-size:11px;opacity:.75;margin:6px 4px 0}
+.card{background:var(--paper);color:var(--ink);border-radius:16px;padding:14px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.lst{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.shop{background:var(--paper);color:var(--ink);border-radius:14px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3);border:3px solid transparent;cursor:pointer}
+.shop.sel{border-color:var(--red)}
+.shop .top{display:flex;gap:10px;align-items:center}
+.rank{flex:none;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sn{font-weight:800;font-size:16px;flex:1}
+.sm{font-size:12.5px;color:var(--sub);margin:4px 0 0 40px}
+.shop .row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 0 40px;flex-wrap:wrap}
+.bdg{display:inline-block;font-size:12px;font-weight:700;border-radius:9px;padding:2px 9px;color:#fff}
+.bdg.ok{background:var(--ok)}.bdg.soon{background:var(--soon);color:#2b1a0e}.bdg.bad{background:var(--out)}.bdg.gr{background:var(--grey)}
+.decide{display:block;width:100%;margin-top:12px;background:var(--red);color:#fff;border:0;border-radius:24px;padding:12px 18px;font-weight:800;font-size:17px;box-shadow:0 3px 0 #8e1b1b}
+.decide:hover:not(:disabled){filter:brightness(1.08)}.decide:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #8e1b1b}
+.decide:disabled{background:#a89888;box-shadow:none;cursor:not-allowed}
+.decide.sm2{width:auto;display:inline-block;margin:0;padding:8px 16px;font-size:14px}
+.dname{font-size:21px;font-weight:800;line-height:1.3}.dgenre{font-size:13px;color:var(--sub);margin:2px 0 8px}
+.facts{list-style:none;padding:0;margin:10px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:13.5px}
+.note{font-size:13px;color:var(--sub);margin:10px 0 0}.why{font-size:12.5px;color:var(--out);margin:8px 0 0;font-weight:700}
+.empty{color:var(--sub);font-size:14px;margin:0}
+details{margin-top:14px;background:var(--panel);border:2px solid #8a5a2a;border-radius:14px;padding:4px 12px}
+summary{cursor:pointer;padding:10px 0;font-weight:700;color:var(--gold)}
+.outs{list-style:none;margin:0;padding:0 0 10px;display:grid;gap:6px}
+.outs button{width:100%;text-align:left;background:#2b1a0e;border:1px solid #6a4a2a;border-radius:10px;padding:8px 10px;display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13.5px}
+.disc{margin:18px 0 8px;font-size:12px;opacity:.85;text-align:center;line-height:1.7}
+.ov{position:fixed;inset:0;z-index:50;background:linear-gradient(#2b1a0e,#5a3a1a);overflow:auto;display:none;text-align:center}
+.ov.open{display:block}
+.ovin{max-width:460px;margin:0 auto;padding:26px 18px 40px;position:relative}
+.mugs{font-size:64px;height:84px;display:flex;justify-content:center;gap:0;position:relative}
+.mugs span{display:inline-block;animation:clinkL 1s ease-out both}
+.mugs span.r{transform:scaleX(-1);animation-name:clinkR}
+@keyframes clinkL{0%{transform:translateX(-120px) rotate(-35deg);opacity:0}55%{transform:translateX(8px) rotate(10deg);opacity:1}75%{transform:translateX(-4px) rotate(-6deg)}100%{transform:none}}
+@keyframes clinkR{0%{transform:scaleX(-1) translateX(-120px) rotate(-35deg);opacity:0}55%{transform:scaleX(-1) translateX(8px) rotate(10deg);opacity:1}75%{transform:scaleX(-1) translateX(-4px) rotate(-6deg)}100%{transform:scaleX(-1)}}
+.spark{position:absolute;left:50%;top:-6px;font-size:36px;transform:translateX(-50%);animation:pop 1s .5s ease-out both}
+@keyframes pop{0%{transform:translateX(-50%) scale(0);opacity:0}50%{transform:translateX(-50%) scale(1.5);opacity:1}100%{transform:translateX(-50%) scale(1);opacity:.9}}
+.cheers{font-size:24px;font-weight:800;color:var(--gold);margin:10px 0 4px;animation:rise .6s .7s ease-out both}
+.ovin .card{margin-top:14px;animation:rise .6s .9s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.ovin .card .dname{font-size:26px}.ovin .facts{grid-template-columns:1fr;text-align:left;font-size:15px;margin-top:12px}
+.ov.big .mugs,.ov.big .cheers{display:none}
+.ov.big .card{background:#fff8ee;border:6px solid var(--red);padding:24px 16px;animation:none}
+.ov.big .card .dname{font-size:36px}.ov.big .facts{font-size:19px}
+.bigline{display:none;font-size:20px;font-weight:800;color:var(--red);margin-top:14px}.ov.big .bigline{display:block}
+.acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+.acts .pbtn{padding:11px 20px;font-size:15px}.acts .pbtn.main{background:var(--red);color:#fff}
+.msg{min-height:24px;margin-top:12px;color:var(--gold);font-weight:700;font-size:14px}
+.conf{position:absolute;left:0;right:0;top:0;height:0;pointer-events:none}
+.conf span{position:fixed;top:-30px;font-size:22px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.8}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+@media(max-width:859px){.view-list .detail{display:none}}
+</style>
+</head>
+<body>
+<header><div class="hd">
+  <div class="logo"><span aria-hidden="true">🏮</span> Kanpai Spot</div>
+  <button class="lang" data-demo="lang-switch" id="langBtn" data-i18n-aria="langAria"><span class="l ja">日本語</span><span>/</span><span class="l en">EN</span></button>
+</div></header>
+
+<main>
+  <section class="hero">
+    <div class="lanterns" aria-hidden="true"><div class="ch">酒</div><div class="ch">呑</div><div class="ch">酒</div></div>
+    <h1 class="tag" data-i18n="tagline" style="font-size:22px"></h1>
+    <p class="sub" data-i18n="sub"></p>
+  </section>
+
+  <section class="panel ctl" data-demo="controls">
+    <div>
+      <div class="cl" data-i18n="ctlTime"></div>
+      <div class="step">
+        <button class="rb" data-act="tminus" data-demo="time-minus" data-i18n-aria="tMinusAria">−</button>
+        <div class="v" id="timeV" data-demo="time-value" aria-live="polite"></div>
+        <button class="rb" data-act="tplus" data-demo="time-plus" data-i18n-aria="tPlusAria">+</button>
+        <button class="link" data-act="treset" data-demo="time-reset" data-i18n="tReset"></button>
+      </div>
+    </div>
+    <div>
+      <div class="cl" data-i18n="ctlParty"></div>
+      <div class="step">
+        <button class="rb" data-act="pminus" data-demo="party-minus" data-i18n-aria="pMinusAria">−</button>
+        <div class="v" id="partyV" data-demo="party-value" aria-live="polite"></div>
+        <button class="rb" data-act="pplus" data-demo="party-plus" data-i18n-aria="pPlusAria">+</button>
+      </div>
+    </div>
+    <div>
+      <div class="cl" data-i18n="ctlRange"></div>
+      <div class="seg" id="rangeSeg"></div>
+    </div>
+  </section>
+
+  <div class="chip" id="chip" hidden data-demo="decision-chip"></div>
+
+  <div class="sum" id="sum" data-demo="summary" aria-live="polite"></div>
+
+  <div class="grid" id="grid">
+    <section>
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tabMap" data-act="tab" data-tab="map" data-demo="tab-map" data-i18n="tabMap"></button>
+        <button role="tab" id="tabList" data-act="tab" data-tab="list" data-demo="tab-list" data-i18n="tabList"></button>
+      </div>
+      <div id="viewMap">
+        <div class="mapwrap" id="map" data-demo="map-area"></div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--ok)"></i><span data-i18n="lgOk"></span></span>
+          <span><i class="dot" style="background:var(--soon)"></i><span data-i18n="lgSoon"></span></span>
+          <span><i class="dot" style="background:var(--out)"></i><span data-i18n="lgOut"></span></span>
+          <span data-i18n="lgRing"></span>
+        </div>
+        <p class="note-s" data-i18n="mapNote"></p>
+      </div>
+      <ul class="lst" id="viewList" data-demo="shop-list" hidden></ul>
+    </section>
+    <aside class="aside">
+      <div class="card detail" id="detail" data-demo="shop-detail"></div>
+      <details id="outBox" data-demo="out-toggle"><summary id="outSum"></summary><ul class="outs" id="outList"></ul></details>
+    </aside>
+  </div>
+
+  <p class="disc" data-i18n="disc"></p>
+</main>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="ovTitle" data-demo="decide-overlay">
+  <div class="conf" id="conf" aria-hidden="true"></div>
+  <div class="ovin">
+    <div class="mugs" aria-hidden="true"><span>🍺</span><span class="r">🍺</span><div class="spark">✨</div></div>
+    <div class="cheers" id="ovTitle" data-i18n="cheers"></div>
+    <div class="card" id="ovCard" data-demo="destination-card"></div>
+    <div class="acts">
+      <button class="pbtn main" id="showBtn" data-act="show" data-demo="show-everyone"></button>
+      <button class="pbtn" data-act="copy" data-demo="copy-text" data-i18n="copy"></button>
+      <button class="pbtn" id="closeBtn" data-act="close" data-demo="close-overlay" data-i18n="close"></button>
+    </div>
+    <div class="msg" id="msg" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+const I18N={
+ja:{
+title:"Kanpai Spot｜今すぐ入れる飲み屋マップ",langAria:"言語を切り替え / Switch language",
+tagline:"今夜の一軒、見つけよう",sub:"勉強会の帰り、仲間と今すぐ入れる一次会のお店を地図で。",
+ctlTime:"いまの時刻（サンプル）",ctlParty:"人数",ctlRange:"駅から徒歩",
+tMinusAria:"15分戻す",tPlusAria:"15分進める",tReset:"20:45に戻す",pMinusAria:"人数を減らす",pPlusAria:"人数を増やす",
+person:"{n}名",minutes:"{n}分",
+sum:"いま入れる店 {n}軒",sumNone:"条件に合う店がありません。人数を減らすか、範囲を広げてみて！",
+tabMap:"🗺 地図",tabList:"📋 リスト",
+mapAria:"高田馬場駅を中心にした店の配置イメージ図",stn:"高田馬場駅",
+lgOk:"余裕あり",lgSoon:"LO間近",lgOut:"入れない",lgRing:"点線の円＝徒歩圏",
+mapNote:"※イメージ図です。実際の地図・距離とは異なります。",
+bOk:"営業中",bSoon:"あと{n}分",bBefore:"{t}開店",bOver:"LO終了",bFull:"{n}名は難しい",bLast:"LOまで{n}分",
+rBefore:"まだ開店前（{t}開店）",rOver:"ラストオーダーが終わりました（{t}）",rFull:"{n}名では入れません（最大{c}名）",rLast:"LOまで{n}分しかありません",
+meta:"徒歩{w}分・{c}名OK・LO {lo}",fWalk:"駅から徒歩{w}分",fCap:"{c}名まで入れる",fLO:"ラストオーダー {lo}",fPrice:"予算 約¥{p}",
+decide:"🍻 ここに決定！",pick:"ピンかカードをタップして、お店を選ぼう。",
+outSum:"いま入れない店（{n}）",outNone:"（なし）",
+chipLabel:"今夜の一軒",chipView:"カードを見る",chipClear:"決め直す",
+cheers:"乾杯！今夜はここに決定",cWalk:"駅から徒歩{w}分",cParty:"{n}名で乾杯",cLO:"ラストオーダー {lo}",cTime:"{t} に決定",
+show:"みんなに見せる",showBack:"もどる",copy:"テキストをコピー",close:"閉じる",
+bigLine:"みんな、ここだよ！ついてきて 🏮",copied:"コピーしました！グループチャットに貼ってね。",copyFail:"コピーできませんでした。カードをスクショして送ってね。",
+share:"🍻 今夜の一軒：{name}\n駅から徒歩{w}分・{n}名・LO {lo}\n（Kanpai Spot）",
+disc:"※店名・営業時間・空席はすべて架空のサンプルで、実在の店舗とは無関係です。駅（高田馬場）だけ実在します。",
+pinAria:"{name}、{status}、徒歩{w}分",
+shops:{
+torirojii:{name:"炭火焼 とり路地",short:"とり路地",genre:"炭火焼き鳥・地鶏",note:"路地裏の炭火焼き。串は1本から頼めて、勉強会の振り返りにぴったり。"},
+manabi:{name:"立ち飲み 学び酒場",short:"学び酒場",genre:"立ち飲み・小皿料理",note:"ふらっと入れる立ち飲み。大人数でも壁ぎわに並んで乾杯できる。"},
+hitoshizuku:{name:"居酒屋 ひとしずく",short:"ひとしずく",genre:"居酒屋・日本酒",note:"小さな座敷の居酒屋。日本酒の飲み比べが人気。LOが近めなので早めに！"},
+chochin:{name:"居酒屋 ちょうちん",short:"ちょうちん",genre:"大衆居酒屋",note:"赤ちょうちんが目印の大箱。座敷も多く、大人数の一次会に頼れる。"},
+baba:{name:"焼き鳥 ばば",short:"焼き鳥 ばば",genre:"焼き鳥・もつ焼き",note:"カウンター中心の焼き鳥屋。5名までなら並んで座れる。"},
+kanpaido:{name:"立ち飲み 乾杯堂",short:"乾杯堂",genre:"立ち飲み",note:"早い時間から開いている立ち飲み。夜は早めにLOになる。"},
+motsu:{name:"もつ鍋 早稲田",short:"もつ鍋 早稲田",genre:"もつ鍋・九州料理",note:"締めのちゃんぽん麺まで楽しめる、じっくり派向けのもつ鍋の店。"},
+hatoba:{name:"海鮮 波止場",short:"波止場",genre:"海鮮・刺身",note:"カウンターだけの小さな海鮮酒場。少人数向け。"},
+ryumon:{name:"餃子と酒 龍門",short:"龍門",genre:"餃子・中華酒場",note:"焼きたて餃子とハイボール。回転が早くて入りやすい。"},
+tsukiakari:{name:"和bar 月あかり",short:"月あかり",genre:"和バー・ウイスキー",note:"21時開店の大人のバー。二軒目に使えるお店。"}}
+},
+en:{
+title:"Kanpai Spot | Find a bar you can enter right now",langAria:"Switch language / 言語を切り替え",
+tagline:"Find tonight's spot",sub:"After your meetup, find a place your group can walk into right now.",
+ctlTime:"Current time (sample)",ctlParty:"Group size",ctlRange:"Walk from station",
+tMinusAria:"Back 15 minutes",tPlusAria:"Forward 15 minutes",tReset:"Back to 20:45",pMinusAria:"Fewer people",pPlusAria:"More people",
+person:"{n}",minutes:"{n} min",
+sum:"{n} spots open for you now",sumNone:"No spots match. Try fewer people or a wider range!",
+tabMap:"🗺 Map",tabList:"📋 List",
+mapAria:"Sketch map of spots around Takadanobaba Station",stn:"Takadanobaba Stn",
+lgOk:"Plenty of time",lgSoon:"Last order soon",lgOut:"Can't enter",lgRing:"Dashed circle = walking range",
+mapNote:"* Sketch only. Not a real map or real distances.",
+bOk:"Open",bSoon:"{n} min left",bBefore:"Opens {t}",bOver:"Closed for orders",bFull:"Too small for {n}",bLast:"LO in {n} min",
+rBefore:"Not open yet (opens {t})",rOver:"Last order has passed ({t})",rFull:"Can't seat {n} (max {c})",rLast:"Only {n} min until last order",
+meta:"{w} min walk · up to {c} · LO {lo}",fWalk:"{w} min walk from station",fCap:"Seats up to {c}",fLO:"Last order {lo}",fPrice:"About ¥{p} per person",
+decide:"🍻 This is the one!",pick:"Tap a pin or a card to choose a spot.",
+outSum:"Can't enter now ({n})",outNone:"(none)",
+chipLabel:"Tonight's spot",chipView:"Show card",chipClear:"Choose again",
+cheers:"Kanpai! It's decided",cWalk:"{w} min walk from the station",cParty:"Cheers for {n}",cLO:"Last order {lo}",cTime:"Decided at {t}",
+show:"Show everyone",showBack:"Back",copy:"Copy text",close:"Close",
+bigLine:"Everyone, it's here! Follow me 🏮",copied:"Copied! Paste it into your group chat.",copyFail:"Couldn't copy. Take a screenshot of the card instead.",
+share:"🍻 Tonight's spot: {name}\n{w} min walk from the station · {n} people · LO {lo}\n(Kanpai Spot)",
+disc:"* All shop names, hours and seats are made-up samples and have nothing to do with real shops. Only the station (Takadanobaba) is real.",
+pinAria:"{name}, {status}, {w} min walk",
+shops:{
+torirojii:{name:"Charcoal Grill Torirojii",short:"Torirojii",genre:"Charcoal yakitori",note:"A back-alley charcoal grill. Order skewers one at a time, perfect for talking over the meetup."},
+manabi:{name:"Standing Bar Manabi Sakaba",short:"Manabi Sakaba",genre:"Standing bar, small plates",note:"Just walk in. Big groups can line up along the wall and cheers."},
+hitoshizuku:{name:"Izakaya Hitoshizuku",short:"Hitoshizuku",genre:"Izakaya, sake",note:"A small tatami izakaya known for sake flights. Last order is close, so go early!"},
+chochin:{name:"Izakaya Chochin",short:"Chochin",genre:"Casual izakaya",note:"Look for the red lantern. A big place with many tatami seats, great for large groups."},
+baba:{name:"Yakitori Baba",short:"Yakitori Baba",genre:"Yakitori, offal skewers",note:"A counter-style yakitori shop. Seats up to 5 side by side."},
+kanpaido:{name:"Standing Bar Kanpaido",short:"Kanpaido",genre:"Standing bar",note:"Opens early in the day, but stops taking orders early at night."},
+motsu:{name:"Motsunabe Waseda",short:"Motsunabe Waseda",genre:"Motsunabe hotpot",note:"Offal hotpot with noodles to finish. For people who like to sit and linger."},
+hatoba:{name:"Seafood Hatoba",short:"Hatoba",genre:"Seafood, sashimi",note:"A tiny counter-only seafood bar. Best for small groups."},
+ryumon:{name:"Gyoza & Sake Ryumon",short:"Ryumon",genre:"Gyoza, Chinese pub",note:"Fresh gyoza and highballs. Tables turn fast, so it's easy to get in."},
+tsukiakari:{name:"Wa-Bar Tsukiakari",short:"Tsukiakari",genre:"Japanese bar, whisky",note:"A grown-up bar that opens at 21:00. Good for a second stop."}}
+}};
+
+const SHOPS=[
+{id:"torirojii",x:205,y:172,open:1020,lo:1380,cap:6,price:3500},
+{id:"manabi",x:135,y:185,open:960,lo:1350,cap:8,price:2500},
+{id:"hitoshizuku",x:250,y:118,open:1020,lo:1290,cap:4,price:3800},
+{id:"chochin",x:95,y:115,open:1020,lo:1440,cap:10,price:3200},
+{id:"baba",x:250,y:200,open:1050,lo:1410,cap:5,price:3000},
+{id:"kanpaido",x:120,y:215,open:900,lo:1230,cap:6,price:2200},
+{id:"motsu",x:290,y:235,open:1020,lo:1500,cap:8,price:4000},
+{id:"hatoba",x:150,y:70,open:1080,lo:1380,cap:3,price:4200},
+{id:"ryumon",x:215,y:65,open:1020,lo:1320,cap:6,price:2800},
+{id:"tsukiakari",x:305,y:170,open:1260,lo:1560,cap:5,price:4500}];
+const SAMPLE_TIME=1245;
+const $=s=>document.querySelector(s);
+
+let lang=(function(){
+  try{ if(window.APP_LANG==="ja"||window.APP_LANG==="en") return window.APP_LANG; }catch(e){}
+  try{ const q=new URLSearchParams(location.search).get("lang"); if(q==="ja"||q==="en") return q; }catch(e){}
+  try{ const v=localStorage.getItem("lang"); if(v==="ja"||v==="en") return v; }catch(e){}
+  return "en";
+})();
+const state={now:SAMPLE_TIME,party:4,range:10,tab:"map",sel:null,decided:null,big:false};
+try{
+  const d=JSON.parse(localStorage.getItem("kanpai-decision")||"null");
+  if(d&&SHOPS.some(s=>s.id===d.id)) state.decided=d;
+}catch(e){}
+
+function t(k,v){let s=I18N[lang][k];if(s===undefined)s=I18N.en[k];if(s===undefined)s=k;
+  if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s;}
+const sh=id=>I18N[lang].shops[id];
+const pad=n=>String(n).padStart(2,"0");
+const fmt=m=>pad(Math.floor(m/60))+":"+pad(m%60);
+const walk=s=>Math.max(1,Math.round(Math.hypot(s.x-180,s.y-150)/9));
+const byId=id=>SHOPS.find(s=>s.id===id);
+
+function status(s){
+  const now=state.now,rem=s.lo-now;
+  if(now<s.open)return{k:"before",ok:false,cls:"gr",rem};
+  if(now>s.lo)return{k:"over",ok:false,cls:"bad",rem};
+  if(state.party>s.cap)return{k:"full",ok:false,cls:"bad",rem};
+  if(rem>=60)return{k:"ok",ok:true,cls:"ok",rem};
+  if(rem>=20)return{k:"soon",ok:true,cls:"soon",rem};
+  return{k:"last",ok:false,cls:"bad",rem};
+}
+function badgeText(s,st){
+  switch(st.k){
+    case"ok":return t("bOk");case"soon":return t("bSoon",{n:st.rem});
+    case"before":return t("bBefore",{t:fmt(s.open)});case"over":return t("bOver");
+    case"full":return t("bFull",{n:state.party});default:return t("bLast",{n:st.rem});}
+}
+function reasonText(s,st){
+  switch(st.k){
+    case"before":return t("rBefore",{t:fmt(s.open)});case"over":return t("rOver",{t:fmt(s.lo)});
+    case"full":return t("rFull",{n:state.party,c:s.cap});case"last":return t("rLast",{n:st.rem});default:return"";}
+}
+const badge=(s,st)=>`<span class="bdg ${st.cls}">${badgeText(s,st)}</span>`;
+function model(){
+  const vis=SHOPS.filter(s=>walk(s)<=state.range).map(s=>({s,st:status(s)}));
+  const avail=vis.filter(o=>o.st.ok).sort((a,b)=>walk(a.s)-walk(b.s)||b.st.rem-a.st.rem);
+  const out=vis.filter(o=>!o.st.ok).sort((a,b)=>walk(a.s)-walk(b.s));
+  return{avail,out,vis};
+}
+
+function renderMap(m){
+  const r=state.range*9;
+  let g=`<svg viewBox="0 0 360 300" role="img" aria-label="${t("mapAria")}">
+  <rect width="360" height="300" fill="#5a3a1a"/>
+  <g fill="#664424" opacity=".8"><rect x="20" y="20" width="60" height="40" rx="4"/><rect x="250" y="12" width="80" height="34" rx="4"/><rect x="20" y="150" width="50" height="40" rx="4"/><rect x="310" y="90" width="40" height="50" rx="4"/><rect x="190" y="215" width="40" height="40" rx="4"/><rect x="20" y="250" width="40" height="36" rx="4"/></g>
+  <path d="M0 282 Q110 252 210 284 T360 268" fill="none" stroke="#3f6a73" stroke-width="9" opacity=".85"/>
+  <g stroke="#8a6a46" stroke-width="9" fill="none"><line x1="0" y1="195" x2="360" y2="195"/><line x1="180" y1="0" x2="180" y2="300"/><line x1="110" y1="0" x2="110" y2="300"/><line x1="290" y1="0" x2="290" y2="300"/></g>
+  <line x1="0" y1="150" x2="360" y2="150" stroke="#2b1a0e" stroke-width="7"/><line x1="0" y1="150" x2="360" y2="150" stroke="#f0e4cf" stroke-width="2" stroke-dasharray="8 6"/>
+  <circle cx="180" cy="150" r="${r}" fill="rgba(255,179,71,.08)" stroke="#ffb347" stroke-width="2" stroke-dasharray="6 5" opacity=".8"/>
+  <g><rect x="160" y="138" width="40" height="24" rx="8" fill="#f5d9a8" stroke="#2b1a0e" stroke-width="2"/><text x="180" y="155" text-anchor="middle" font-size="12" font-weight="800" fill="#3b2417">${lang==="ja"?"駅":"Stn"}</text>
+  <text x="180" y="130" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff8ee" stroke="#2b1a0e" stroke-width="3" paint-order="stroke">${t("stn")}</text></g>`;
+  const colors={ok:"#1f7a47",soon:"#e67e22",bad:"#c0392b",gr:"#6d5a4a"};
+  m.vis.forEach(o=>{
+    const s=o.s,st=o.st,idx=m.avail.indexOf(o),label=idx>=0?idx+1:"–";
+    const ly=s.y>262?-20:27;
+    g+=`<g class="pin" transform="translate(${s.x} ${s.y})" tabindex="0" role="button" data-act="sel" data-id="${s.id}" data-demo="pin-${s.id}" aria-label="${t("pinAria",{name:sh(s.id).name,status:badgeText(s,st),w:walk(s)})}">
+    ${state.sel===s.id?'<circle class="ring" r="19"/>':""}
+    <rect x="-6" y="-16" width="12" height="5" rx="1" fill="#2b1a0e"/><rect x="-6" y="11" width="12" height="5" rx="1" fill="#2b1a0e"/>
+    <ellipse class="b" rx="11" ry="12.5" fill="${colors[st.cls]}" stroke="#2b1a0e" stroke-width="2" opacity="${st.ok?1:.75}"/>
+    <text y="4.5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">${label}</text>
+    <text class="lbl" y="${ly}">${sh(s.id).short}</text></g>`;
+  });
+  $("#map").innerHTML=g+"</svg>";
+}
+function renderList(m){
+  $("#viewList").innerHTML=m.avail.length?m.avail.map((o,i)=>{
+    const s=o.s,n=sh(s.id);
+    return `<li class="shop ${state.sel===s.id?"sel":""}" tabindex="0" role="button" data-act="sel" data-id="${s.id}" data-demo="shop-card-${s.id}">
+    <div class="top"><span class="rank">${i+1}</span><span class="sn">${n.name}</span></div>
+    <div class="sm">${t("meta",{w:walk(s),c:s.cap,lo:fmt(s.lo)})}</div>
+    <div class="row">${badge(s,o.st)}<button class="decide sm2" data-act="decide" data-id="${s.id}" data-demo="decide-${s.id}">${t("decide")}</button></div></li>`;}).join("")
+    :`<li class="card"><p class="empty">${t("sumNone")}</p></li>`;
+}
+function renderDetail(){
+  const box=$("#detail");
+  if(!state.sel){box.innerHTML=`<p class="empty">${t("pick")}</p>`;return;}
+  const s=byId(state.sel),n=sh(s.id),st=status(s);
+  box.innerHTML=`<div class="dname">${n.name}</div><div class="dgenre">${n.genre}</div>${badge(s,st)}
+  <ul class="facts"><li>🚶 ${t("fWalk",{w:walk(s)})}</li><li>👥 ${t("fCap",{c:s.cap})}</li><li>⏰ ${t("fLO",{lo:fmt(s.lo)})}</li><li>💴 ${t("fPrice",{p:s.price.toLocaleString()})}</li></ul>
+  <p class="note">${n.note}</p>
+  <button class="decide" data-act="decide" data-id="${s.id}" data-demo="decide-btn" ${st.ok?"":"disabled"}>${t("decide")}</button>
+  ${st.ok?"":`<p class="why">${reasonText(s,st)}</p>`}`;
+}
+function renderOut(m){
+  $("#outSum").textContent=t("outSum",{n:m.out.length});
+  $("#outList").innerHTML=m.out.length?m.out.map(o=>`<li><button data-act="sel" data-id="${o.s.id}" data-demo="out-${o.s.id}"><span>${sh(o.s.id).name}</span>${badge(o.s,o.st)}</button></li>`).join(""):`<li class="empty" style="padding:4px 2px">${t("outNone")}</li>`;
+}
+function renderChip(){
+  const c=$("#chip"),d=state.decided;
+  if(!d){c.hidden=true;return;}
+  c.hidden=false;
+  c.innerHTML=`<span>🏮 ${t("chipLabel")}</span><b>${sh(d.id).name}</b><span class="sp"></span>
+  <button class="pbtn" data-act="reopen" data-demo="reopen-card">${t("chipView")}</button>
+  <button class="pbtn" data-act="clear" data-demo="clear-decision">${t("chipClear")}</button>`;
+}
+function render(){
+  const m=model();
+  if(!state.sel||!m.vis.some(o=>o.s.id===state.sel))state.sel=m.avail.length?m.avail[0].s.id:null;
+  $("#timeV").textContent=fmt(state.now);
+  $("#partyV").textContent=t("person",{n:state.party});
+  $("#rangeSeg").innerHTML=[5,10,15].map(n=>`<button data-act="range" data-n="${n}" data-demo="range-${n}" aria-pressed="${state.range===n}">${t("minutes",{n})}</button>`).join("");
+  $("#sum").textContent=m.avail.length?t("sum",{n:m.avail.length}):t("sumNone");
+  $("#tabMap").setAttribute("aria-selected",state.tab==="map");
+  $("#tabList").setAttribute("aria-selected",state.tab==="list");
+  $("#viewMap").hidden=state.tab!=="map";$("#viewList").hidden=state.tab!=="list";
+  $("#grid").className="grid view-"+state.tab;
+  renderMap(m);renderList(m);renderDetail();renderOut(m);renderChip();
+  if($("#ov").classList.contains("open"))renderOverlay();
+}
+
+/* overlay */
+function renderOverlay(){
+  const d=state.decided;if(!d)return;
+  const s=byId(d.id),n=sh(d.id);
+  $("#ovCard").innerHTML=`<div class="dname">${n.name}</div><div class="dgenre">${n.genre}</div>
+  <ul class="facts"><li>🚶 ${t("cWalk",{w:walk(s)})}</li><li>👥 ${t("cParty",{n:d.party})}</li><li>⏰ ${t("cLO",{lo:fmt(s.lo)})}</li><li>🕘 ${t("cTime",{t:fmt(d.time)})}</li></ul>
+  <div class="bigline">${t("bigLine")}</div>`;
+  $("#showBtn").textContent=state.big?t("showBack"):t("show");
+  $("#ov").classList.toggle("big",state.big);
+}
+function confetti(){
+  const c=$("#conf"),em=["🎉","✨","🏮","🍻","🍢"];let h="";
+  for(let i=0;i<18;i++)h+=`<span style="left:${Math.random()*96}vw;animation-duration:${2.4+Math.random()*2}s;animation-delay:${0.6+Math.random()*1.2}s">${em[i%em.length]}</span>`;
+  c.innerHTML=h;
+}
+function openOverlay(){
+  state.big=false;$("#msg").textContent="";
+  $("#ov").classList.add("open");document.body.style.overflow="hidden";
+  renderOverlay();confetti();
+  const mg=$(".mugs");mg.innerHTML=mg.innerHTML; // restart animation
+  $("#closeBtn").focus();
+}
+function closeOverlay(){$("#ov").classList.remove("open");document.body.style.overflow="";}
+function decide(id){
+  state.sel=id;
+  state.decided={id,time:state.now,party:state.party};
+  try{localStorage.setItem("kanpai-decision",JSON.stringify(state.decided));}catch(e){}
+  render();openOverlay();
+}
+function shareText(){
+  const d=state.decided,s=byId(d.id);
+  return t("share",{name:sh(d.id).name,w:walk(s),n:d.party,lo:fmt(s.lo)});
+}
+async function copyText(){
+  const txt=shareText();let ok=false;
+  try{await navigator.clipboard.writeText(txt);ok=true;}catch(e){
+    try{const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");ta.remove();}catch(e2){ok=false;}
+  }
+  $("#msg").textContent=ok?t("copied"):t("copyFail");
+}
+
+/* events */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");if(!el)return;
+  const a=el.dataset.act;
+  if(a==="sel"){state.sel=el.dataset.id;render();}
+  else if(a==="decide"){e.stopPropagation();decide(el.dataset.id);}
+  else if(a==="tab"){state.tab=el.dataset.tab;render();}
+  else if(a==="tminus"){state.now=Math.max(960,state.now-15);render();}
+  else if(a==="tplus"){state.now=Math.min(1545,state.now+15);render();}
+  else if(a==="treset"){state.now=SAMPLE_TIME;render();}
+  else if(a==="pminus"){state.party=Math.max(1,state.party-1);render();}
+  else if(a==="pplus"){state.party=Math.min(10,state.party+1);render();}
+  else if(a==="range"){state.range=+el.dataset.n;render();}
+  else if(a==="reopen"){openOverlay();}
+  else if(a==="clear"){state.decided=null;try{localStorage.removeItem("kanpai-decision");}catch(err){}render();}
+  else if(a==="show"){state.big=!state.big;renderOverlay();}
+  else if(a==="copy"){copyText();}
+  else if(a==="close"){closeOverlay();}
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&$("#ov").classList.contains("open")){closeOverlay();return;}
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches('[role=button][data-act="sel"]')){
+    e.preventDefault();state.sel=e.target.dataset.id;render();
+    const again=document.querySelector(`[role=button][data-id="${state.sel}"]`);if(again)again.focus();
+  }
+});
+$("#langBtn").addEventListener("click",()=>setLang(lang==="ja"?"en":"ja"));
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.title=t("title");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n);});
+  document.querySelectorAll("[data-i18n-aria]").forEach(el=>{el.setAttribute("aria-label",t(el.dataset.i18nAria));});
+  document.querySelector(".lang .ja").classList.toggle("active",lang==="ja");
+  document.querySelector(".lang .en").classList.toggle("active",lang==="en");
+  render();
+}
+function setLang(l){lang=l;try{localStorage.setItem("lang",l);}catch(e){}applyLang();}
+applyLang();
+</script>
+</body>
+</html>

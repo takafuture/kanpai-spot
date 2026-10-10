@@ -1,2 +1,19 @@
-# kanpai-spot
-勉強会の帰りに、仲間と今すぐ入れる飲み屋を地図で見つけて「ここに決定！」できる
+# Kanpai Spot
+
+
+
+- ▶ **Try it:** https://takafuture.github.io/kanpai-spot/
+
+## About
+
+See the app and [IDEA.md](IDEA.md) (the idea log, in Japanese).
+
+## How it was made
+
+Built by shaping the idea together with AI (Claude) and publishing the AI-written code.
+The full conversation is in [IDEA.md](IDEA.md) (Japanese).
+
+## Files
+
+- `index.html` — the app (a single self-contained file)
+- `IDEA.md` — the idea log
