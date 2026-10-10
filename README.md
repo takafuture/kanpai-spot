@@ -1,5 +1,7 @@
 # Kanpai Spot
 
+<img src="assets/logo.png" alt="Kanpai Spot logo" width="160">
+
 
 
 - ▶ **Try it:** https://takafuture.github.io/kanpai-spot/
@@ -17,3 +19,4 @@ The full conversation is in [IDEA.md](IDEA.md) (Japanese).
 
 - `index.html` — the app (a single self-contained file)
 - `IDEA.md` — the idea log
+- `assets/logo.png` — the logo
